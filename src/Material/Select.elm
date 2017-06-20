@@ -396,7 +396,11 @@ view lift model properties items =
             ]
 
         trigger =
-            [ Icon.view "expand_more" [] |> Html.map lift
+            [ i
+                [ class "icon fa fa-chevron-circle-down"
+                , attribute "aria-hidden" "true"
+                ]
+                []
             , Textfield.view (TextfieldMsg >> lift) model.textfield textfieldOptions
                   []
 

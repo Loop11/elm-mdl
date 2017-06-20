@@ -186,7 +186,7 @@
 .mdl-select .mdl-textfield .mdl-textfield__input {
   cursor: pointer; }
 
-.mdl-select .material-icons {
+.mdl-select i.icon {
   position: absolute;
   top: 21px;
   right: 0;
