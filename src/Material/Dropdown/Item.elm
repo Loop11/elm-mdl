@@ -2,40 +2,48 @@ module Material.Dropdown.Item
     exposing
         ( Model
         , item
-
         , Property
         , Config
         , defaultConfig
-
         , onSelect
         , disabled
         , divider
         , ripple
         , options
         , selected
-
         , view
         , Msg(..)
         )
 
 {-| TODO
 
+
 # Item
+
 @docs item
 
+
 # Listeners
+
 @docs onSelect
 
+
 # Property
+
 @docs selected, disabled, divider, ripple, options
 
+
 # API
+
 @docs Property, Config, defaultConfig
 
+
 # Elm architecture
+
 @docs Model, Msg, view
 
 @docs onSelect, disabled, divider, ripple
+
 -}
 
 import Dict exposing (Dict)
@@ -70,22 +78,23 @@ type alias ItemIndex =
 -}
 item : List (Property m) -> List (Html m) -> Model m
 item options html =
-  { html = html
-  , options = options
-  }
+    { html = html
+    , options = options
+    }
 
 
 {-| TODO
 -}
-type Msg m =
-      Select (Maybe m)
+type Msg m
+    = Select (Maybe m)
     | Ripple Ripple.Msg
 
 
 {-| TODO
 -}
 type alias Store s =
-    { s | ripples : Dict ItemIndex Ripple.Model
+    { s
+        | ripples : Dict ItemIndex Ripple.Model
         , index : Maybe ItemIndex
         , open : Bool
     }
@@ -132,7 +141,8 @@ view lift top index model defaultOptions =
                 , when config.ripple (cs "mdl-js-ripple-effect")
                 , when config.divider (cs "mdl-menu__item--full-bleed-divider")
                 , when config.selected (cs "mdl-menu__item--selected")
-                , css "display" "flex"
+
+                -- , css "display" "flex"
                 , css "align-items" "center"
                 ]
                 (List.filterMap identity
@@ -167,6 +177,7 @@ view lift top index model defaultOptions =
                  else
                     html
                 )
+
 
 
 -- PROPERTIES
@@ -233,7 +244,7 @@ ripple =
 
 {-| TODO
 -}
-options : List (Style m)-> Property m
+options : List (Style m) -> Property m
 options v =
     Options.option (\config -> { config | options = v })
 
