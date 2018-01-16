@@ -9,18 +9,13 @@ module Material.Dropdown
         , over
         , below
         , index
-
         , Item
         , item
-
         , render
         , react
-
         , Config
         , defaultConfig
-
         , defaultIndex
-
         , Model
         , defaultModel
         , Msg(..)
@@ -31,32 +26,51 @@ module Material.Dropdown
 {-| This component implements a generic dropdown component. It is used by
 Material.Menu and Material.Select.
 
+
 # Render
+
 @docs render
 
+
 # Options
+
 @docs Property
 
+
 # Alignment
+
 @docs Alignment, bottomLeft, bottomRight, topLeft, topRight
 
+
 # Configuration
+
 @docs index
 
+
 # Item
+
 @docs Item, item
 
+
 # Config
+
 @docs Config, defaultConfig
 
+
 # Helpers
+
 @docs defaultIndex
 
+
 # Elm architecture
+
 @docs Model, defaultModel, Msg, update, view
 
+
 # Internal use
+
 @docs react
+
 -}
 
 import Dict exposing (Dict)
@@ -94,6 +108,7 @@ transitionDuration =
         * constant.transitionDurationFraction
 
 
+
 -- MODEL
 
 
@@ -110,14 +125,14 @@ type alias Model =
 {-| Convenience export from Dropdown.Item
 -}
 type alias Item m =
-  Item.Model m
+    Item.Model m
 
 
 {-| Convenience export from Dropdown.Item
 -}
 item : List (Item.Property m) -> List (Html m) -> Item.Model m
 item =
-  Item.item
+    Item.item
 
 
 {-| Default component model
@@ -129,6 +144,7 @@ defaultModel =
     , geometry = Nothing
     , index = Nothing
     }
+
 
 
 -- ACTION, UPDATE
@@ -147,7 +163,7 @@ type Msg m
 {-| The index of an item in the Dropdown's list.
 -}
 type alias ItemIndex =
-  Int
+    Int
 
 
 {-| ItemSummary in particular captures an Item's onSelect handler which need to
@@ -155,6 +171,7 @@ be passed from view to model to Dispatch it.
 
 TODO: We only need onSelect, to we should refactor this type to have a nicer
 type signature for Key.
+
 -}
 type alias ItemSummary m =
     Internal.Summary (Item.Config m) m
@@ -171,7 +188,6 @@ type alias KeyCode =
 update : (Msg msg -> msg) -> Msg msg -> Model -> ( Model, Cmd msg )
 update fwd msg model =
     case msg of
-
         Open geometry ->
             { model
                 | open = True
@@ -228,43 +244,41 @@ update fwd msg model =
             in
                 if model.open && not (inside pos container) then
                     update fwd Close model
-                  else
+                else
                     model ! []
 
         Key defaultIndex summaries keyCode g ->
             case keyCode of
-
                 9 ->
                     -- TAB
                     update fwd Close model
 
                 13 ->
                     -- ENTER
-
                     if model.open then
-                            -- TODO: trigger ripple
-                            case defaultIndex of
-                                Just index ->
-                                    let
-                                        cmd =
-                                            List.drop index summaries
-                                                |> List.head
-                                                |> Maybe.andThen (.config >> .onSelect)
-                                    in
-                                        update fwd (ItemMsg index (Item.Select cmd)) model
+                        -- TODO: trigger ripple
+                        case defaultIndex of
+                            Just index ->
+                                let
+                                    cmd =
+                                        List.drop index summaries
+                                            |> List.head
+                                            |> Maybe.andThen (.config >> .onSelect)
+                                in
+                                    update fwd (ItemMsg index (Item.Select cmd)) model
 
-                                _ ->
-                                    update fwd Close model
-                        else
-                            update fwd (Open g) model
+                            _ ->
+                                update fwd Close model
+                    else
+                        update fwd (Open g) model
 
                 27 ->
                     -- ESC
                     update fwd Close model
 
                 32 ->
-                  -- SPACE, same as ENTER
-                  update fwd (Key defaultIndex summaries 13 g) model
+                    -- SPACE, same as ENTER
+                    update fwd (Key defaultIndex summaries 13 g) model
 
                 40 ->
                     -- DOWN_ARROW
@@ -321,6 +335,7 @@ update fwd msg model =
 
                 _ ->
                     model ! []
+
 
 
 -- PROPERTIES
@@ -425,32 +440,35 @@ index v =
 -- VIEW
 
 
-containerGeometry : Alignment
-  -> Geometry
-  -> { top : Maybe Float
-     , left : Maybe Float
-     , bottom : Maybe Float
-     , right : Maybe Float
-     }
+containerGeometry :
+    Alignment
+    -> Geometry
+    ->
+        { top : Maybe Float
+        , left : Maybe Float
+        , bottom : Maybe Float
+        , right : Maybe Float
+        }
 containerGeometry alignment geometry =
     case alignment of
         BottomLeft ->
             { top =
-                  geometry.button.offsetTop + geometry.button.offsetHeight |> Just
+                geometry.button.offsetTop + geometry.button.offsetHeight |> Just
             , left =
-                  geometry.menu.offsetLeft |> Just
+                geometry.menu.offsetLeft |> Just
             , bottom =
-                  Nothing
+                Nothing
             , right =
-                  Nothing
+                Nothing
             }
+
         BottomRight ->
             { top =
-                  geometry.button.offsetTop + geometry.button.offsetHeight |> Just
+                geometry.button.offsetTop + geometry.button.offsetHeight |> Just
             , left =
-                  Nothing
+                Nothing
             , bottom =
-                  Nothing
+                Nothing
             , right =
                 let
                     right e =
@@ -458,31 +476,33 @@ containerGeometry alignment geometry =
                 in
                     right geometry.container - right geometry.menu |> Just
             }
+
         TopLeft ->
             { top =
-                  Nothing
+                Nothing
             , left =
-                  geometry.menu.offsetLeft |> Just
+                geometry.menu.offsetLeft |> Just
             , bottom =
-                  let
-                      bottom =
-                          geometry.container.bounds.top + geometry.container.bounds.height
-                  in
-                      bottom - geometry.button.bounds.top |> Just
+                let
+                    bottom =
+                        geometry.container.bounds.top + geometry.container.bounds.height
+                in
+                    bottom - geometry.button.bounds.top |> Just
             , right =
-                  Nothing
+                Nothing
             }
+
         TopRight ->
             { top =
-                  Nothing
+                Nothing
             , left =
-                  Nothing
+                Nothing
             , bottom =
-                  let
-                      bottom =
-                          geometry.container.bounds.top + geometry.container.bounds.height
-                  in
-                      bottom - geometry.button.bounds.top |> Just
+                let
+                    bottom =
+                        geometry.container.bounds.top + geometry.container.bounds.height
+                in
+                    bottom - geometry.button.bounds.top |> Just
             , right =
                 let
                     right e =
@@ -490,25 +510,27 @@ containerGeometry alignment geometry =
                 in
                     right geometry.container - right geometry.menu |> Just
             }
+
         Over ->
             { top =
-                  Just 0
+                Just 0
             , left =
-                  Just (geometry.button.bounds.width - geometry.menu.bounds.width)
+                Just (geometry.button.bounds.width - geometry.menu.bounds.width)
             , bottom =
-                  Nothing
+                Nothing
             , right =
-                  Nothing
+                Nothing
             }
+
         Below ->
             { top =
-                  Just (geometry.button.bounds.height + 20)
+                Just (geometry.button.bounds.height + 20)
             , left =
-                  Just 0
+                Just 0
             , bottom =
-                  Nothing
+                Nothing
             , right =
-                  Just 0
+                Just 0
             }
 
 
@@ -517,19 +539,24 @@ applyContainerGeometry alignment g =
     let
         f v =
             Maybe.map toPx v
-            |> Maybe.withDefault "auto"
+                |> Maybe.withDefault "auto"
 
         r =
             containerGeometry alignment g
     in
-    [ css "top" (f r.top)
-    , css "bottom" (f r.bottom)
-    , css "left" (f r.left)
-    , css "right" (f r.right)
-    , css "width" (if alignment == Below then "100%" else (g.menu.bounds.width |> toPx))
-    , css "height" (g.menu.bounds.height |> toPx)
-    ]
-    |> Options.many
+        [ css "top" (f r.top)
+        , css "bottom" (f r.bottom)
+        , css "left" (f r.left)
+        , css "right" (f r.right)
+        , css "width"
+            (if alignment == Below then
+                "100%"
+             else
+                (g.menu.bounds.width |> toPx)
+            )
+        , css "height" (g.menu.bounds.height |> toPx)
+        ]
+            |> Options.many
 
 
 clip : Model -> Alignment -> Geometry -> Property m
@@ -542,25 +569,24 @@ clip model alignment g =
             g.menu.bounds.height
     in
         css "clip" <|
-        if model.open then
-            if alignment == Below then
-                rect 0 g.button.bounds.width height 0
+            if model.open then
+                if alignment == Below then
+                    rect 0 g.button.bounds.width height 0
+                else
+                    rect 0 width height 0
             else
-                rect 0 width height 0
-          else
-            case alignment of
+                case alignment of
+                    BottomRight ->
+                        rect 0 width 0 width
 
-                BottomRight ->
-                    rect 0 width 0 width
+                    TopLeft ->
+                        rect height 0 height 0
 
-                TopLeft ->
-                    rect height 0 height 0
+                    TopRight ->
+                        rect height width height width
 
-                TopRight ->
-                    rect height width height width
-
-                _ ->
-                    ""
+                    _ ->
+                        ""
 
 
 {-| The default index captures the notion of the currently selected item, or
@@ -574,15 +600,15 @@ when the Dropdown closes.
 defaultIndex : Model -> Maybe Int -> Maybe Int
 defaultIndex model defaultValue =
     if model.index /= Nothing then
-          model.index
-        else
-          defaultValue
+        model.index
+    else
+        defaultValue
 
 
 {-| Component view.
 -}
-view
-    : (Msg m -> m)
+view :
+    (Msg m -> m)
     -> Model
     -> List (Property m)
     -> List (Item m)
@@ -620,11 +646,10 @@ view lift model properties items =
             containerGeometry config.alignment g
 
         menu =
-          g.menu.bounds
+            g.menu.bounds
 
         fwdRipple =
             Item.Ripple >> ItemMsg -1 >> lift
-
 
         numItems =
             List.length items
@@ -635,67 +660,79 @@ view lift model properties items =
         itemSummaries =
             List.map (Internal.collect Item.defaultConfig << .options) items
 
+        dropdownMaxHeightCss =
+            css "max-height" "300px"
     in
-      styled Html.div
-        [ cs "mdl-menu__container"
-        , cs "is-upgraded"
-        , when model.open (cs "is-visible")
-        , when model.open (applyContainerGeometry config.alignment g)
-        ]
-        [ styled Html.div
-            [ cs "mdl-menu__outline"
-            , alignment
-            , when (model.open && (config.alignment /= Below))
-                (css "width" <| toPx menu.width)
-            , when model.open (css "height" <| toPx menu.height)
+        styled Html.div
+            [ cs "mdl-menu__container"
+            , cs "is-upgraded"
+            , when model.open (cs "is-visible")
+            , when model.open (applyContainerGeometry config.alignment g)
             ]
-            []
-        , styled Html.Keyed.ul
-            [ cs "mdl-menu"
-            , cs "mdl-js-menu"
-            , clip model config.alignment g
-            , alignment
-            ]
-            ( let
-                view1 index item options =
-                    Item.view
-                        (ItemMsg index >> lift)
-                        model
-                        index
-                        item
-                        (when (Just index == defaultIndex_) Item.selected :: options)
+            [ styled Html.div
+                [ cs "mdl-menu__outline"
+                , alignment
+                , when (model.open && (config.alignment /= Below))
+                    (css "width" <| toPx menu.width)
+                , when model.open (css "height" <| toPx menu.height)
+                , dropdownMaxHeightCss
+                , css "z-index" "initial"
+                ]
+                []
+            , styled Html.Keyed.ul
+                [ cs "mdl-menu"
+                , cs "mdl-js-menu"
 
-                transitionDelays =
-                    List.map2
-                        ( \offsetTop offsetHeight ->
-                          transitionDelay
-                              config.alignment
-                              g.menu.bounds.height
-                              offsetTop
-                              offsetHeight
-                        )
-                        g.offsetTops
-                        g.offsetHeights
-              in
-                if model.open then
+                -- , clip model config.alignment g
+                , alignment
+                , dropdownMaxHeightCss
+                , css "overflow-y" "scroll"
+                , css "position" "initial"
+                , css "box-sizing" "border-box"
+                ]
+                (let
+                    view1 index item options =
+                        Item.view
+                            (ItemMsg index >> lift)
+                            model
+                            index
+                            item
+                            (when (Just index == defaultIndex_) Item.selected :: options)
+
+                    transitionDelays =
+                        List.map2
+                            (\offsetTop offsetHeight ->
+                                transitionDelay
+                                    config.alignment
+                                    g.menu.bounds.height
+                                    offsetTop
+                                    offsetHeight
+                            )
+                            g.offsetTops
+                            g.offsetHeights
+                 in
+                    if model.open then
                         List.indexedMap
-                            ( \index (item, transitionDelay) ->
-                                  view1 index item [ transitionDelay ]
+                            (\index ( item, transitionDelay ) ->
+                                view1 index item [ transitionDelay ]
                             )
                             (List.map2 (,) items transitionDelays)
                     else
                         List.indexedMap
-                            ( \index item ->
-                                  view1 index item []
+                            (\index item ->
+                                view1 index item []
                             )
                             items
-            )
-        ]
+                )
+            ]
+
+
 
 -- TODO: different from Shared.delay
 
-transitionDelay
-    : Alignment
+
+transitionDelay :
+    Alignment
     -> Float
     -> Float
     -> Float
@@ -709,6 +746,7 @@ transitionDelay alignment height offsetTop offsetHeight =
                 (offsetTop / height * transitionDuration)
     in
         css "transition-delay" <| toString t ++ "s"
+
 
 
 -- COMPONENT
@@ -753,6 +791,7 @@ indicated in `Material`, and a user message `Select String`.
         [ onSelect "Yet another item" ]
         [ text "Yet another item" ]
       ]
+
 -}
 render :
     (Component.Msg button textfield (Msg m) layout toggles tooltip tabs select dispatch
@@ -765,6 +804,7 @@ render :
     -> Html m
 render =
     Component.render get view Component.MenuMsg
+
 
 
 -- HELPERS
