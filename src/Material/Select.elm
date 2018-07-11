@@ -83,6 +83,7 @@ Along with this module you will want to import Material.Dropdown.Item.
 import Dict exposing (Dict)
 import DOM
 import DOM exposing (Rectangle)
+import FontAwesome
 import Html.Attributes as Attributes exposing (class, type_, attribute, property)
 import Html.Events as Html exposing (defaultOptions, targetValue)
 import Html exposing (..)
@@ -396,11 +397,14 @@ view lift model properties items =
             ]
 
         trigger =
-            [ i
-                [ class "icon fa fa-chevron-circle-down"
-                , attribute "aria-hidden" "true"
-                ]
-                []
+            [ styled_ Html.div
+                  [ css "position" "absolute"
+                  , css "top" "22px"
+                  , css "right" "8px"
+                  ]
+                  []
+                  [ FontAwesome.icon FontAwesome.chevronCircleDown ]
+
             , Textfield.view (TextfieldMsg >> lift) model.textfield textfieldOptions
                   []
 

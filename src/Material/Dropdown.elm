@@ -659,13 +659,12 @@ view lift model properties items =
 
         itemSummaries =
             List.map (Internal.collect Item.defaultConfig << .options) items
-
-        dropdownMaxHeightCss =
-            css "max-height" "300px"
     in
         styled Html.div
             [ cs "mdl-menu__container"
             , cs "is-upgraded"
+            , css "max-height" "300px"
+            , css "overflow-y" "scroll"
             , when model.open (cs "is-visible")
             , when model.open (applyContainerGeometry config.alignment g)
             ]
@@ -675,7 +674,6 @@ view lift model properties items =
                 , when (model.open && (config.alignment /= Below))
                     (css "width" <| toPx menu.width)
                 , when model.open (css "height" <| toPx menu.height)
-                , dropdownMaxHeightCss
                 , css "z-index" "initial"
                 ]
                 []
@@ -685,8 +683,6 @@ view lift model properties items =
 
                 -- , clip model config.alignment g
                 , alignment
-                , dropdownMaxHeightCss
-                , css "overflow-y" "scroll"
                 , css "position" "initial"
                 , css "box-sizing" "border-box"
                 ]
