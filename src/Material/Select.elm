@@ -93,7 +93,6 @@ import Material.Dropdown as Dropdown exposing (Msg)
 import Material.Dropdown.Geometry as Geometry exposing (Geometry)
 import Material.Dropdown.Item as Item
 import Material.Helpers as Helpers exposing (pure, map1st)
-import Material.Icon as Icon
 import Material.Options as Options exposing (Style, cs, css, styled, styled_, when)
 import Material.Options.Internal as Internal
 import Material.Ripple as Ripple
